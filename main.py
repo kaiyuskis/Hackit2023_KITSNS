@@ -52,16 +52,19 @@ def signup():
         if request.method == 'POST':
             username = request.form.get('username')
             password = generate_password_hash(request.form.get('password'))
-            user = User(username=username, password=password)
+            user = User.query.filter_by(username=username).first()
+
             if user == None:
+                user = User(username=username, password=password)
                 db.session.add(user)
                 db.session.commit()
                 return render_template('login.html')
-            return render_template('login.html')
+            else:
+                return render_template('login.html')
         else:
             return render_template('signup.html')
-    except  ValueError as e:
-        print(e)
+
+    except ValueError as e:
         return render_template('login.html')
 
 
