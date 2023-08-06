@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1>質問一覧</h1>
+
+<div class="search">
+    <form action="/search_word" method="POST">
+        <input type="text" name="search">
+        <input type="submit" value="検索">
+    </form>
+</div>
+
+<a href="/question" class="btn-lg btn-info" role="button">質問する</a>
+
+<div class="container">
+    <div>
+        {% for question in questions %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ question.user }}</h5>
+                <p class="card-text">{{ question.detail }}</p>
+                <a href="/detail/{{ question.id }}" class="btn btn-primary">詳細</a>
+                <a href="/answer/{{ question.id }}" class="btn btn-primary">回答する</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<a href="/main" class="btn-lg btn-info" role="button">メインページへ</a>
+
+{% endblock %}

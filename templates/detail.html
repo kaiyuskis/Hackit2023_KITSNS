@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h1>質問詳細</h1>
+
+<dev class="container">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>質問内容</h5>
+            <p class="card-title">{{ question.user }}</p>
+            <p class="card-text">{{ question.detail }}</p>
+            <h5>回答一覧</h5>
+        </div>
+        {% for answer in answers %}
+        <div class="card-body">
+            <p class="card-title">{{ answer.user }}</p>
+            <p class="card-text">{{ answer.detail }}</p>
+        </div>
+        {% endfor %}
+        <div class="card-body">
+            <a href="/" class="btn btn-primary">戻る</a>
+            <a href="/answer/{{ question.id }}" class="btn btn-primary">回答する</a>
+        </div>
+    </div>
+</dev>
+{% endblock %}
