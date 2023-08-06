@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from datetime import datetime
@@ -13,6 +13,7 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# テーブル作成
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
@@ -33,6 +34,13 @@ class Answer(db.Model):
 
     question = db.relationship('Question', backref=db.backref('answers', lazy=True))
 
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(80), nullable=False, unique=False, index=True)
+    description = db.Column(db.String(200), nullable=False)
+
+# ログインが必要なページにアクセスした際にログインページにリダイレクトする
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -46,6 +54,7 @@ def index():
     questions = Question.query.all()
     return render_template('index.html', questions=questions)
 
+# ログインなどの処理を行う
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     try:
@@ -58,35 +67,48 @@ def signup():
                 user = User(username=username, password=password)
                 db.session.add(user)
                 db.session.commit()
-                return render_template('login.html')
+                return render_template('login.html', text='登録完了しました。')
             else:
-                return render_template('login.html')
+                return render_template('login.html', text='ユーザー名が既に使用されているか、パスワードが異なります。')
         else:
-            return render_template('signup.html')
+            return render_template('signup.html', text='error')
 
     except ValueError as e:
-        return render_template('login.html')
-
+        print(e)
+        return render_template('login.html', text='ユーザー名が既に使用されているか、パスワードが異なります')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user = User.query.filter_by(username=username).first()
+    try:
+        if request.method == 'POST':
+            username = request.form.get('username')
+            password = request.form.get('password')
+            user = User.query.filter_by(username=username).first()
 
-        if user == None:
-            return render_template("signup.html")
+            if user == None:
+                return render_template('login.html', text='ユーザー名が既に使用されているか、パスワードが異なります')
 
-        elif check_password_hash(user.password, password):
-            login_user(user)
-            return render_template('index.html')
+            elif check_password_hash(user.password, password):
+                login_user(user)
+                return render_template('index.html', text='ログイン完了しました')
+
+            else:
+                return render_template('login.html', text='ユーザー名が既に使用されているか、パスワードが異なります')
+
         else:
             return render_template('login.html')
-    else:
-        return render_template('login.html')
 
+    except ValueError as e:
+        print(e)
+        return render_template('login.html', text = 'error')
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return render_template('login.html')
+
+# 質問などの処理を行う
 @app.route('/question', methods=['GET', 'POST'])
 def question():
     if request.method == 'POST':
@@ -131,11 +153,31 @@ def searching():
         questions = db.session.query(Question).filter(or_(Question.detail.contains(text_input))).all()
         return render_template('index.html', questions=questions)
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return render_template('login.html')
+# 学生ステーション問い合わせフォーム
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+@app.route("/contact/complete", methods=["GET", "POST"])
+def contact_complete():
+    if request.method == "POST":
+        # フォームの値を取得する
+        if not request.form["username"] or not request.form["email"] or not request.form["description"]:
+            flash("入力してください")
+            return redirect(url_for("contact"))
+        else:
+            username = request.form["username"]
+            email = request.form["email"]
+            description = request.form["description"]
+
+            post = Post(username=username, email=email, description=description)
+            db.session.add(post)
+            db.session.commit()
+            flash("問い合わせ内容はメールに送信しました。問い合わせありがとうございました。")
+            return redirect(url_for("contact_complete"))
+
+    else:
+        return render_template("contact_complete.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

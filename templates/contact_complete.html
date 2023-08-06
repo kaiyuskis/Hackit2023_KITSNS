@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}問い合わせフォーム{% endblock %}
+
+{% block body %}
+
+<h2>問い合わせ完了</h2>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+    {% endif %}
+    {% endwith %}
+
+<a href="/contact" class="btn btn-primary">戻る</a>
+<a href="/main" class="btn btn-primary">メイン画面へ</a>
+
+{% endblock %}
