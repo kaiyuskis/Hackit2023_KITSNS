@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}問い合わせフォーム{% endblock %}
+{% block title %}学生ステーション問い合わせフォーム{% endblock %}
 
 {% block body %}
 <div class="container">
@@ -30,9 +30,9 @@
             <label for="description" class="form-label">問い合わせ内容</label>
             <textarea name="description" class="form-control" placeholder="問い合わせ内容">{{ description }}</textarea>
         </div>
-        <div class="d-grid gap-2">
-            <a href="{{ url_for('main2') }}" class="btn btn-info btn-block">戻る</a>
-            <button type="submit" class="btn btn-primary">問い合わせ</button>
+        <div class="justify-content">
+            <a href="{{ url_for('main2') }}" class="btn btn-primary btn-block">戻る</a>
+            <button type="submit" class="btn btn-success">問い合わせ</button>
         </div>
     </form>
 </div>

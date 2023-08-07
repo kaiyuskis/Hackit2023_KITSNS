@@ -61,7 +61,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not is_logged_in():
-            return redirect(url_for('main'))  # ログインしていない場合はログインページにリダイレクト
+            return redirect(url_for('login'))  # ログインしていない場合はログインページにリダイレクト
         return f(*args, **kwargs)
     return decorated_function
 
@@ -247,7 +247,7 @@ def contact_complete():
 @login_required
 def tweet():
     if request.method == 'POST':
-        username = request.form['username']
+        username = 'user'
         detail = request.form['detail']
         post_date = datetime.now()
         tweet = Tweet(username=username, detail=detail, post_date=post_date)
