@@ -2,51 +2,38 @@
 {% block title %}問い合わせフォーム{% endblock %}
 
 {% block body %}
-<h2>学生ステーション問い合わせフォーム</h2>
+<div class="container">
+    <h2 class="my-4">学生ステーション問い合わせフォーム</h2>
 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li class="flash">{{ message }}</li>
-        {% endfor %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-info">
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
         </ul>
-        {% endif %}
-        {% endwith %}
-    <form action="{{ url_for('contact_complete') }}" method="POST" novalidate="novalidate">
-        <table>
-            <tr>
-                <td>ユーザ名</td>
-                <td>
-                    <input
-                        type="text"
-                        name="username"
-                        value="{{ username }}"
-                        placeholder="ユーザ名"
-                    />
-                </td>
-            </tr>
-            <tr>
-                <td>メールアドレス</td>
-                <td>
-                    <input
-                        type="text"
-                        name="email"
-                        value="{{ email }}"
-                        placeholder="メールアドレス"
-                    />
-                </td>
-            </tr>
-            <tr>
-                <td>問い合わせ内容</td>
-                <td>
-                    <textarea name="description" placeholder="問い合わせ内容">{{ description }}</textarea>
-                </td>
-            </tr>
-        </table>
-        <a href="/main" class="btn btn-primary">戻る</a>
-        <input type="submit" value="問い合わせ" />
-    </form>
+    </div>
+    {% endif %}
+    {% endwith %}
 
+    <form action="{{ url_for('contact_complete') }}" method="POST" novalidate="novalidate">
+        <div class="mb-3">
+            <label for="username" class="form-label">ユーザ名</label>
+            <input type="text" name="username" value="{{ username }}" class="form-control" placeholder="ユーザ名">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">メールアドレス</label>
+            <input type="text" name="email" value="{{ email }}" class="form-control" placeholder="メールアドレス">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">問い合わせ内容</label>
+            <textarea name="description" class="form-control" placeholder="問い合わせ内容">{{ description }}</textarea>
+        </div>
+        <div class="d-grid gap-2">
+            <a href="{{ url_for('main2') }}" class="btn btn-info btn-block">戻る</a>
+            <button type="submit" class="btn btn-primary">問い合わせ</button>
+        </div>
+    </form>
+</div>
 {% endblock %}
-```

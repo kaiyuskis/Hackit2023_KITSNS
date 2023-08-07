@@ -1,15 +1,31 @@
 {% extends "base.html" %}
-{% block title %}ユーザ登録{% endblock %}
+{% block title %}サインアップ{% endblock %}
 {% block body %}
 <body>
-    <h1>ユーザ登録</h1>
-    <form action="/signup" method="POST">
-        <label for="username">ユーザ名:</label>
-        <input type="text" name="username" required><br>
-        <label for="password">パスワード</label>
-        <input type="password" name="password" required><br>
-        <input type="submit" value="新規登録">
-    </form>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">サインアップ</h1>
+                        <form action="{{ url_for('signup') }}" method="POST">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">ユーザ名:</label>
+                                <input type="text" name="username" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">パスワード:</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">新規登録</button>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <p class="text-center">アカウントをお持ちですか？ <a href="/login">ログイン画面へ</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
-
 {% endblock %}
