@@ -187,6 +187,25 @@ def searching():
         questions = db.session.query(Question).filter(or_(Question.detail.contains(text_input))).all()
         return render_template('index.html', questions=questions)
 
+@app.route('/delete/<int:question_id>')
+@login_required
+def delete(question_id):
+    question = Question.query.get(question_id)
+    answers = Answer.query.filter(Answer.question_id == question_id).all()
+    db.session.delete(question)
+    for answer in answers:
+        db.session.delete(answer)
+    db.session.commit()
+    return redirect('/question_main')
+
+@app.route('/delete_answer/<int:answer_id>')
+@login_required
+def delete_answer(answer_id):
+    answer = Answer.query.get(answer_id)
+    db.session.delete(answer)
+    db.session.commit()
+    return redirect('/detail/' + str(answer.question_id))
+
 # 学生ステーション問い合わせフォーム
 @app.route("/contact")
 @login_required
@@ -234,10 +253,13 @@ def tweet():
         tweet = Tweet(username=username, detail=detail, post_date=post_date)
         db.session.add(tweet)
         db.session.commit()
-        return redirect(url_for('tweet_main'))
+        return redirect(url_for('tweet'))
     else:
-        tweets = Tweet.query.all()
-        return render_template('tweet.html', tweets=tweets)
+        try:
+            tweets = Tweet.query.all()
+            return render_template('tweet.html', tweets=tweets)
+        except:
+            return render_template('tweet.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

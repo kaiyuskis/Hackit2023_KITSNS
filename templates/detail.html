@@ -9,6 +9,7 @@
             <h5 class="card-title">質問内容</h5>
             <p class="card-text">{{ question.user }}</p>
             <p class="card-text">{{ question.detail }}</p>
+            <p class="card-text"><small class="text-muted">{{ question.post_date }}</small></p>
         </div>
     </div>
 
@@ -18,6 +19,7 @@
         <div class="card-body">
             <h5 class="card-title">{{ answer.user }}</h5>
             <p class="card-text">{{ answer.detail }}</p>
+            <p class="card-text"><small class="text-muted">{{ answer.post_date }}</small></p>
         </div>
     </div>
     {% endfor %}
@@ -29,6 +31,11 @@
         <div class="col-md-6 text-md-end">
             <a href="/answer/{{ question.id }}" class="btn btn-primary">回答する</a>
         </div>
+        <div class="col-md-6 text-md-end">
+            <a href="/delete/{{ question.id }}" class="btn btn-primary">削除する</a>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <a href="/delete_answer/{{ question.id }}" class="btn btn-primary">回答削除</a>
     </div>
 </div>
 {% endblock %}

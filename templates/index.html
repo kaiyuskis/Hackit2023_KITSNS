@@ -35,9 +35,11 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ question.user }}</h5>
                     <p class="card-text">{{ question.detail }}</p>
+                    <p class="card-text"><small class="text-muted">{{ question.post_date }}</small></p>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a href="/detail/{{ question.id }}" class="btn btn-primary me-md-2 mb-2">詳細</a>
                         <a href="/answer/{{ question.id }}" class="btn btn-primary mb-2">回答する</a>
+                        <a href="/delete/{{ question.id }}" class="btn btn-danger mb-2">削除</a>
                     </div>
                 </div>
             </div>
